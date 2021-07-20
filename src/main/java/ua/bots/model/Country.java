@@ -14,9 +14,9 @@ public class Country {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column("name")
+    @Column(name = "name")
     private String name;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<City> cities;
 }

@@ -4,15 +4,26 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 import ua.bots.model.City;
 import ua.bots.model.Country;
+import ua.bots.repository.CountryRepository;
 
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class CityAndCountryLoader {
+@Component
+public class CityAndCountryLoader implements CommandLineRunner
+{
+    private final CountryRepository countryRepository;
+
+    public CityAndCountryLoader(CountryRepository countryRepository) {
+        this.countryRepository = countryRepository;
+    }
 
     @SneakyThrows
     public Set<Country> loadFromJson() {
@@ -26,9 +37,14 @@ public class CityAndCountryLoader {
         }
     }
 
-    public static void main(String[] args) {
-        CityAndCountryLoader loader = new CityAndCountryLoader();
-        loader.loadFromJson().forEach(System.out::println);
+    @Override
+    public void run(String... args) throws Exception {
+        Set<Country> countries = loadFromJson();
+
+        long count = countries.stream().mapToLong(country -> country.getCities().size()).sum();
+        System.out.println(count);
+
+        countryRepository.saveAll(countries);
     }
 
     @Data

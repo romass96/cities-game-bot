@@ -1,0 +1,7 @@
+bot:
+  token: "1910553785:AAG3PISOeHJJbGdOVxbTQwKmh5ymcjnmKZU"
+  username: "CitiesGameSuperBot"
+
+srping:
+  datasource:
+    url: "jdbc:h2:mem:cities-game-db"
