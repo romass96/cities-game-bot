@@ -12,4 +12,5 @@ public interface GameService {
     void addCityToGame(City city, Game game);
     boolean gameContainsCity(Game game, City city);
     void stopGame(Game game);
+    void setUserWinner(Game game);
 }

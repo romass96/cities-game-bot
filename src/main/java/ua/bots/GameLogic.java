@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ua.bots.exception.GameLogicException;
+import ua.bots.exception.UserIsWinnerException;
 import ua.bots.model.City;
 import ua.bots.model.Game;
 import ua.bots.model.GameCity;
@@ -49,6 +50,10 @@ public class GameLogic {
             printCityAnswer(cityForAnswer, chatId);
         } catch ( GameLogicException e ) {
             sendAnswer(chatId, e.getMessage());
+        } catch ( UserIsWinnerException e ) {
+            Game activeGame = e.getActiveGame();
+            gameService.setUserWinner(activeGame);
+            sendAnswer(chatId, "You are winner. Type /start to start new game");
         }
     }
 
@@ -57,8 +62,12 @@ public class GameLogic {
     }
 
     public void processStopCommand(Long chatId) {
-        Game game = processActiveGame(chatId);
-        gameService.stopGame(game);
+        try {
+            Game game = processActiveGame(chatId);
+            gameService.stopGame(game);
+        } catch ( GameLogicException e ) {
+            sendAnswer(chatId, e.getMessage());
+        }
     }
 
     private Game processActiveGame(Long chatId) {
@@ -86,7 +95,7 @@ public class GameLogic {
 
     private City processCityForAnswer(Game activeGame, City userCity) {
         return findCityForAnswer(userCity, activeGame)
-            .orElseThrow(() -> new GameLogicException("You are winner. Type /start to start new game"));
+            .orElseThrow(() -> new UserIsWinnerException(activeGame));
     }
 
     private City processUserInputCity(String userInputCity) {

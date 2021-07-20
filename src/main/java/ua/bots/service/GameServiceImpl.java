@@ -53,6 +53,13 @@ public class GameServiceImpl implements GameService {
     @Override
     public void stopGame(Game game) {
         game.setActive(false);
+        game.setUserWinning(false);
+        gameRepository.save(game);
+    }
+
+    @Override
+    public void setUserWinner(Game game) {
+        game.setUserWinning(true);
         gameRepository.save(game);
     }
 
