@@ -3,7 +3,9 @@ package ua.bots.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -29,5 +31,11 @@ public class Game {
         gameCity.setCity(city);
         gameCity.setGame(this);
         cities.add(gameCity);
+    }
+
+    public Optional<City> getLastCity() {
+        return cities.stream()
+            .max(Comparator.comparing(GameCity::getId))
+            .map(GameCity::getCity);
     }
 }
