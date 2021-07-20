@@ -11,9 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import ua.bots.command.HelpCommand;
-import ua.bots.command.StartCommand;
-import ua.bots.service.GameService;
+import ua.bots.command.ServiceCommand;
 
 import javax.annotation.PostConstruct;
 
@@ -30,15 +28,13 @@ public class GameBot extends TelegramLongPollingCommandBot
     @Autowired
     private GameLogic gameLogic;
 
-    public GameBot(GameService gameService) {
-        super();
-        register(new StartCommand(gameService));
-        register(new HelpCommand());
-    }
+    @Autowired
+    private ServiceCommand[] serviceCommands;
 
     @PostConstruct
-    public void registerBot() throws TelegramApiException
-    {
+    public void registerBot() throws TelegramApiException {
+        registerAll(serviceCommands);
+
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(this);
     }

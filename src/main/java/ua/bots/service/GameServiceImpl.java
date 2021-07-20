@@ -50,4 +50,10 @@ public class GameServiceImpl implements GameService {
         return gameCities.contains(city);
     }
 
+    @Override
+    public void stopGame(Game game) {
+        game.setActive(false);
+        gameRepository.save(game);
+    }
+
 }

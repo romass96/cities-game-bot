@@ -8,19 +8,20 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import ua.bots.GameLogic;
 
 @Component
-public class StartCommand extends ServiceCommand {
-    private static final String ANSWER_TEXT = "Let's start. If you need a help, please, type /help";
+public class StopCommand extends ServiceCommand {
+    private static final String ANSWER_TEXT = "You have stopped this game and it is lost. "
+        + "In order to start new game type /start";
 
     @Autowired
     private GameLogic gameLogic;
 
-    public StartCommand() {
-        super("start", "Start command");
+    public StopCommand() {
+        super("stop", "Stop command");
     }
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
-        gameLogic.processStartCommand(chat.getId());
+        gameLogic.processStopCommand(chat.getId());
 
         String userName = getUserName(user);
         sendAnswer(absSender, chat.getId(), userName, ANSWER_TEXT);

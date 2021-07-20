@@ -52,6 +52,15 @@ public class GameLogic {
         }
     }
 
+    public void processStartCommand(Long chatId) {
+        gameService.create(chatId);
+    }
+
+    public void processStopCommand(Long chatId) {
+        Game game = processActiveGame(chatId);
+        gameService.stopGame(game);
+    }
+
     private Game processActiveGame(Long chatId) {
         return gameService.findActiveGame(chatId)
             .orElseThrow(() -> new GameLogicException("You don't have active games. Type /start to start game"));
