@@ -6,6 +6,7 @@ import ua.bots.model.Game;
 import ua.bots.model.GameCity;
 import ua.bots.repository.GameRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -61,6 +62,14 @@ public class GameServiceImpl implements GameService {
     public void setUserWinner(Game game) {
         game.setUserWinning(true);
         gameRepository.save(game);
+    }
+
+    @Override
+    public String getStatistics(Long chatId) {
+        List<Game> allGames = gameRepository.findByChatId(chatId);
+        long userWinnings = allGames.stream().filter(Game::getUserWinning).count();
+        return String.format("Total: %d%nUser winnings: %d%nBot winnings:%d",
+                allGames.size(), userWinnings, (allGames.size() - userWinnings));
     }
 
 }

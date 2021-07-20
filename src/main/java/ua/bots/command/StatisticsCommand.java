@@ -8,21 +8,17 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import ua.bots.GameLogic;
 
 @Component
-public class StartCommand extends ServiceCommand {
-    private static final String ANSWER_TEXT = "Go ahead. Type your city";
+public class StatisticsCommand extends ServiceCommand {
 
     @Autowired
     private GameLogic gameLogic;
 
-    public StartCommand() {
-        super("start", "Start command");
+    public StatisticsCommand() {
+        super("statistics", "Statistics command");
     }
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
-        gameLogic.processStartCommand(chat.getId());
-
-        String userName = getUserName(user);
-        sendAnswer(absSender, chat.getId(), userName, ANSWER_TEXT);
+        gameLogic.processStatisticsCommand(chat.getId());
     }
 }

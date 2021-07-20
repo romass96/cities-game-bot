@@ -29,7 +29,6 @@ public class Game {
     public void addCity(City city) {
         GameCity gameCity = new GameCity();
         gameCity.setCity(city);
-        gameCity.setGame(this);
         cities.add(gameCity);
     }
 

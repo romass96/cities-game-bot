@@ -13,4 +13,5 @@ public interface GameService {
     boolean gameContainsCity(Game game, City city);
     void stopGame(Game game);
     void setUserWinner(Game game);
+    String getStatistics(Long chatId);
 }

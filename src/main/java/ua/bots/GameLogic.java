@@ -70,6 +70,11 @@ public class GameLogic {
         }
     }
 
+    public void processStatisticsCommand(Long chatId) {
+        String message = gameService.getStatistics(chatId);
+        sendAnswer(chatId, message);
+    }
+
     private Game processActiveGame(Long chatId) {
         return gameService.findActiveGame(chatId)
             .orElseThrow(() -> new GameLogicException("You don't have active games. Type /start to start game"));
@@ -79,6 +84,7 @@ public class GameLogic {
         log.info("User input: {}", userInputCity);
         //TODO Fix this logic
         activeGame.getLastCity().ifPresent(lastCity -> {
+            log.info("Last city: {}", lastCity.getName());
             String desiredLetter = String.valueOf(getLastChar(lastCity.getName()));
             if ( !userInputCity.startsWith(desiredLetter) ) {
                 throw new GameLogicException("Wrong city. It should start with " + desiredLetter + " letter");
