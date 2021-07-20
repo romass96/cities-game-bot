@@ -13,12 +13,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ua.bots.command.HelpCommand;
 import ua.bots.command.StartCommand;
-import ua.bots.model.Game;
-import ua.bots.repository.GameRepository;
 import ua.bots.service.GameService;
 
 import javax.annotation.PostConstruct;
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -30,11 +27,11 @@ public class GameBot extends TelegramLongPollingCommandBot
     @Value("${bot.username}")
     private String botUsername;
 
-    private final GameService gameService;
+    @Autowired
+    private GameLogic gameLogic;
 
     public GameBot(GameService gameService) {
         super();
-        this.gameService = gameService;
         register(new StartCommand(gameService));
         register(new HelpCommand());
     }
@@ -55,13 +52,11 @@ public class GameBot extends TelegramLongPollingCommandBot
     public void processNonCommandUpdate(Update update) {
         if (update.hasMessage()) {
             Message message = update.getMessage();
-            Long chatId = message.getChatId();
-
-            sendAnswer(chatId, "Wrong command");
+            gameLogic.processGameUpdate(message);
         }
     }
 
-    private void sendAnswer(Long chatId, String text) {
+    public void sendAnswer(Long chatId, String text) {
         SendMessage answer = new SendMessage();
         answer.setText(text);
         answer.setChatId(chatId.toString());

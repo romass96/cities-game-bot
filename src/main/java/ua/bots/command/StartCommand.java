@@ -3,8 +3,6 @@ package ua.bots.command;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import ua.bots.model.Game;
-import ua.bots.repository.GameRepository;
 import ua.bots.service.GameService;
 
 public class StartCommand extends ServiceCommand {

@@ -40,10 +40,6 @@ public class CityAndCountryLoader implements CommandLineRunner
     @Override
     public void run(String... args) throws Exception {
         Set<Country> countries = loadFromJson();
-
-        long count = countries.stream().mapToLong(country -> country.getCities().size()).sum();
-        System.out.println(count);
-
         countryRepository.saveAll(countries);
     }
 
@@ -54,11 +50,11 @@ public class CityAndCountryLoader implements CommandLineRunner
 
         public Country convertToCountry() {
             Country countryObject = new Country();
-            countryObject.setName(country);
+            countryObject.setName(country.toLowerCase());
 
             Set<City> setOfCities = Arrays.stream(cities).map(cityName -> {
                 City city = new City();
-                city.setName(cityName);
+                city.setName(cityName.toLowerCase());
                 city.setCountry(countryObject);
                 return city;
             }).collect(Collectors.toSet());

@@ -3,6 +3,8 @@ package ua.bots.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "games")
@@ -18,4 +20,14 @@ public class Game {
     private Boolean userWinning;
 
     private Boolean active;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<GameCity> cities = new HashSet<>();
+
+    public void addCity(City city) {
+        GameCity gameCity = new GameCity();
+        gameCity.setCity(city);
+        gameCity.setGame(this);
+        cities.add(gameCity);
+    }
 }

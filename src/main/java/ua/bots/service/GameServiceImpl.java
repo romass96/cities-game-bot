@@ -1,10 +1,14 @@
 package ua.bots.service;
 
 import org.springframework.stereotype.Service;
+import ua.bots.model.City;
 import ua.bots.model.Game;
+import ua.bots.model.GameCity;
 import ua.bots.repository.GameRepository;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class GameServiceImpl implements GameService {
@@ -33,4 +37,17 @@ public class GameServiceImpl implements GameService {
     public Optional<Game> findActiveGame(Long chatId) {
         return gameRepository.findByActiveAndChatId(true, chatId);
     }
+
+    @Override
+    public void addCityToGame(City city, Game game) {
+        game.addCity(city);
+        gameRepository.save(game);
+    }
+
+    @Override
+    public boolean gameContainsCity(Game game, City city) {
+        Set<City> gameCities = game.getCities().stream().map(GameCity::getCity).collect(Collectors.toSet());
+        return gameCities.contains(city);
+    }
+
 }
