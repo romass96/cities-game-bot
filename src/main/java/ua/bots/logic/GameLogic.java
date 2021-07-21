@@ -1,4 +1,4 @@
-package ua.bots;
+package ua.bots.logic;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ua.bots.exception.GameLogicException;
 import ua.bots.exception.UserIsWinnerException;
+import ua.bots.logic.GameBot;
 import ua.bots.model.City;
 import ua.bots.model.Game;
 import ua.bots.model.GameCity;
@@ -42,11 +43,11 @@ public class GameLogic {
             City userCity = processUserInputCity(userInputCityName);
             checkIfCityIsPresentInGame(activeGame, userCity);
 
-            gameService.addCityToGame(userCity, activeGame);
+            Game updatedGame = gameService.addCityToGame(userCity, activeGame);
 
-            City cityForAnswer = processCityForAnswer(activeGame, userCity);
+            City cityForAnswer = processCityForAnswer(updatedGame, userCity);
             log.info("{} found for answer", cityForAnswer.getName());
-            gameService.addCityToGame(cityForAnswer, activeGame);
+            gameService.addCityToGame(cityForAnswer, updatedGame);
             printCityAnswer(cityForAnswer, chatId);
         } catch ( GameLogicException e ) {
             sendAnswer(chatId, e.getMessage());
@@ -82,7 +83,6 @@ public class GameLogic {
 
     private void checkIfUserCityStartsWithCorrectLetter(Game activeGame, String userInputCity) {
         log.info("User input: {}", userInputCity);
-        //TODO Fix this logic
         activeGame.getLastCity().ifPresent(lastCity -> {
             log.info("Last city: {}", lastCity.getName());
             String desiredLetter = String.valueOf(getLastChar(lastCity.getName()));
@@ -110,7 +110,7 @@ public class GameLogic {
     }
 
     private void sendAnswer(Long chatId, String answer) {
-        log.info("Sending answer {} to chat {}", answer, chatId);
+        log.info("Sending to chat {} answer:\"{}\"",chatId, answer);
         gameBot.sendAnswer(chatId, answer);
     }
 

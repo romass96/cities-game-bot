@@ -40,9 +40,9 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void addCityToGame(City city, Game game) {
+    public Game addCityToGame(City city, Game game) {
         game.addCity(city);
-        gameRepository.save(game);
+        return gameRepository.save(game);
     }
 
     @Override
